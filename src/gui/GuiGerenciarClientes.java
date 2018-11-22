@@ -5,6 +5,10 @@
  */
 package gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 
 /**
@@ -14,7 +18,9 @@ import model.Cliente;
 public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
 
     private Cliente cliente;
+    private List<Cliente> clientes;
     private static Boolean aberto = false;
+    private static Boolean alterando = false;
     /**
      * Creates new form GuiGerenciarClientes
      */
@@ -42,8 +48,8 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         campoNome = new javax.swing.JTextField();
-        campoTelefone = new javax.swing.JTextField();
         btnCadastrar = new javax.swing.JButton();
+        campoTelefone = new javax.swing.JFormattedTextField();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblClientes = new javax.swing.JTable();
@@ -52,9 +58,30 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
 
         popupMenu1.setLabel("popupMenu1");
 
+        setClosable(true);
+        setIconifiable(true);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameClosing(evt);
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+        });
+
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastro de Cliente"));
 
-        jLabel1.setText("Nome");
+        jLabel1.setText("Nome*");
 
         jLabel2.setText("Telefone");
 
@@ -65,6 +92,12 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
             }
         });
 
+        try {
+            campoTelefone.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) ##### - ####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -73,16 +106,17 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnCadastrar)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(campoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(campoNome)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(campoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(16, 16, 16))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,7 +129,7 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(campoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(btnCadastrar)
                 .addContainerGap())
         );
@@ -116,8 +150,18 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(TblClientes);
 
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnApagar.setText("Apagar");
+        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApagarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -166,20 +210,98 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // TODO add your handling code here:
-        cliente = new Cliente();
-        cliente.setNome(campoNome.getText());
-        cliente.setTelefone(campoTelefone.getText());
-        this.setVisible(false);
+        if(!alterando){
+            if(!campoNome.getText().isEmpty()){ //Verify if the name's field is empty
+                cliente = new Cliente();
+                cliente.setNome(campoNome.getText());
+                cliente.setTelefone(campoTelefone.getText());
+                clientes.add(cliente);
+            }else{
+                JOptionPane.showMessageDialog(null, "Favor preencher o campo obrigatório");
+            }
+        }else{
+            cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
+            cliente.setNome(campoNome.getText());
+            cliente.setTelefone(campoTelefone.getText());
+        }
+        alterando = false;
+        limparCampos(); //clean fields after submit a new object
+        preencherTabela();
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+        alterando = true;
+        cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
+        campoNome.setText(cliente.getNome());
+        campoTelefone.setText(cliente.getTelefone());
+        campoNome.requestFocus();
+    }//GEN-LAST:event_btnAlterarActionPerformed
 
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        // TODO add your handling code here:
+        cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
+        clientes.remove(cliente);
+        preencherTabela();
+    }//GEN-LAST:event_btnApagarActionPerformed
+
+    private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
+        // TODO add your handling code here:
+        aberto = false;
+    }//GEN-LAST:event_formInternalFrameClosing
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        // TODO add your handling code here:
+        preencherTabela();
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    
+    
+    //Fill in the table
+    private void preencherTabela(){
+    
+        DefaultTableModel tbl = (DefaultTableModel) TblClientes.getModel();
+        int qtdeLinhas = tbl.getRowCount();
+        
+        for(int i = qtdeLinhas - 1; i >= 0 ; i--){
+            tbl.removeRow(0);
+        }
+        
+        for (int i = 0; i < clientes.size(); i++){
+            Cliente c1 = (Cliente) clientes.get(i);
+            Object linha[] = {c1, c1.getTelefone()};
+            tbl.addRow(linha);
+        }
+           
+    }
+    
+    
+    //Clean textfields
+    private void limparCampos(){
+        campoNome.setText("");
+        campoTelefone.setText("");
+    }
+    
+    
+    
+    //Getters & Setters
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TblClientes;
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JTextField campoNome;
-    private javax.swing.JTextField campoTelefone;
+    private javax.swing.JFormattedTextField campoTelefone;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

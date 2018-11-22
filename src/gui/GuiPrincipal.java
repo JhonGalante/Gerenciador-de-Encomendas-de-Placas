@@ -5,6 +5,10 @@
  */
 package gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import model.Cliente;
+
 /**
  *
  * @author jhona
@@ -14,6 +18,9 @@ public class GuiPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form GuiPrincipal
      */
+    
+    private List<Cliente> clientes = new ArrayList();
+    
     public GuiPrincipal() {
         initComponents();
     }
@@ -29,31 +36,34 @@ public class GuiPrincipal extends javax.swing.JFrame {
 
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
-        gerenciarCliente = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuCliente = new javax.swing.JMenu();
+        gerenciarCliente = new javax.swing.JMenuItem();
         encomendaMenu = new javax.swing.JMenu();
         gerenciarEncomenda = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(800, 800));
+        setTitle("Gestão de Encomendas");
+        setAutoRequestFocus(false);
+        setPreferredSize(new java.awt.Dimension(400, 300));
+        setSize(new java.awt.Dimension(400, 300));
 
-        gerenciarCliente.setMnemonic('f');
-        gerenciarCliente.setText("Cliente");
+        menuCliente.setMnemonic('f');
+        menuCliente.setText("Cliente");
+        menuCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClienteActionPerformed(evt);
+            }
+        });
+
+        gerenciarCliente.setText("Gerenciar");
         gerenciarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gerenciarClienteActionPerformed(evt);
             }
         });
+        menuCliente.add(gerenciarCliente);
 
-        jMenuItem1.setText("Gerenciar");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        gerenciarCliente.add(jMenuItem1);
-
-        menuBar.add(gerenciarCliente);
+        menuBar.add(menuCliente);
 
         encomendaMenu.setMnemonic('e');
         encomendaMenu.setText("Encomenda");
@@ -69,27 +79,30 @@ public class GuiPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void gerenciarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerenciarClienteActionPerformed
+    private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClienteActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_gerenciarClienteActionPerformed
+    }//GEN-LAST:event_menuClienteActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void gerenciarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerenciarClienteActionPerformed
         // TODO add your handling code here:
         GuiGerenciarClientes gi = GuiGerenciarClientes.getInstance();
+        if (gi==null) return;
+        gi.setClientes(clientes); //set list of clients
         desktopPane.add(gi);
         gi.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        clientes = gi.getClientes(); //get new list of clients
+    }//GEN-LAST:event_gerenciarClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,13 +139,23 @@ public class GuiPrincipal extends javax.swing.JFrame {
         });
     }
 
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu encomendaMenu;
-    private javax.swing.JMenu gerenciarCliente;
+    private javax.swing.JMenuItem gerenciarCliente;
     private javax.swing.JMenuItem gerenciarEncomenda;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuCliente;
     // End of variables declaration//GEN-END:variables
 
 }

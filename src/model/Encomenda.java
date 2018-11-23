@@ -22,14 +22,18 @@ public class Encomenda {
     private LocalDate dataEntrega;
     private Double valorServico;
     private Double valorSinal;
+    private Cliente cliente;
+    private Boolean finalizada;
     
     public Encomenda(){
         this.altura = 0.0;
         this.largura = 0.0;
         this.fraseEscrita = "";
-        this.dataEntrega = LocalDate.parse("01/01/2000", DateTimeFormatter.ISO_DATE);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        this.dataEntrega = LocalDate.parse("01/01/2000", formatter);
         this.valorServico = 0.0;
         this.valorSinal = 0.0;
+        this.finalizada = false;
     }
 
     public Double getAltura() {
@@ -83,9 +87,14 @@ public class Encomenda {
     public Double getValorServico() {
         return valorServico;
     }
-
-    public void setValorServico(Double valorServico) {
-        this.valorServico = valorServico;
+    
+    //Calculate services' value
+    public void setValorServico() {
+        Double area = this.altura * this.largura;
+        Double custoMaterial = area * 147.30;
+        String fraseSemEspaco = fraseEscrita.replaceAll(" ", "");
+        Double custoDesenho = fraseSemEspaco.length() * 0.32;
+        this.valorServico = custoMaterial + custoDesenho;
     }
 
     public Double getValorSinal() {
@@ -95,6 +104,21 @@ public class Encomenda {
     public void setValorSinal(Double valorSinal) {
         this.valorSinal = valorSinal;
     }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+    
+    @Override
+    public String toString(){
+        return this.cliente.getNome();
+    }
+    
+    
     
     
     

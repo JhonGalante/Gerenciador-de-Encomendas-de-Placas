@@ -145,13 +145,6 @@ public class TelaLogin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos");
     }//GEN-LAST:event_btnEntrarActionPerformed
 
-    private void createAccMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccMouseClicked
-        // TODO add your handling code here:
-        GuiCriarConta guiConta = new GuiCriarConta(null, true);
-        guiConta.setVisible(true);
-        usuariosCadastrados.add(guiConta.getUsuario());
-    }//GEN-LAST:event_createAccMouseClicked
-
     /**
      * @param args the command line arguments
      */
@@ -169,13 +162,13 @@ public class TelaLogin extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -186,6 +179,13 @@ public class TelaLogin extends javax.swing.JFrame {
             }
         });
     }
+    private void createAccMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccMouseClicked
+        // TODO add your handling code here:
+        GuiCriarConta guiConta = new GuiCriarConta(null, true);
+        guiConta.setVisible(true);
+        usuariosCadastrados.add(guiConta.getUsuario());
+    }//GEN-LAST:event_createAccMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrar;

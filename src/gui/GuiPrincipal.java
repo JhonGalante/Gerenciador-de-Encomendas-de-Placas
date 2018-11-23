@@ -8,6 +8,7 @@ package gui;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
+import model.Encomenda;
 
 /**
  *
@@ -20,6 +21,8 @@ public class GuiPrincipal extends javax.swing.JFrame {
      */
     
     private List<Cliente> clientes = new ArrayList();
+    private List<Encomenda> encomendasAndamento = new ArrayList();
+    private List<Encomenda> encomendasFinalizadas = new ArrayList();
     
     public GuiPrincipal() {
         initComponents();
@@ -69,6 +72,11 @@ public class GuiPrincipal extends javax.swing.JFrame {
         encomendaMenu.setText("Encomenda");
 
         gerenciarEncomenda.setText("Gerenciar");
+        gerenciarEncomenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gerenciarEncomendaActionPerformed(evt);
+            }
+        });
         encomendaMenu.add(gerenciarEncomenda);
 
         menuBar.add(encomendaMenu);
@@ -103,6 +111,19 @@ public class GuiPrincipal extends javax.swing.JFrame {
         gi.setVisible(true);
         clientes = gi.getClientes(); //get new list of clients
     }//GEN-LAST:event_gerenciarClienteActionPerformed
+
+    private void gerenciarEncomendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerenciarEncomendaActionPerformed
+        // TODO add your handling code here:
+        GuiGerenciarEncomendas gi = GuiGerenciarEncomendas.getInstance();
+        if(gi==null) return;
+        gi.setEncomendasAndamento(encomendasAndamento);
+        gi.setEncomendasFinalizadas(encomendasFinalizadas);
+        gi.setClientes(clientes);
+        desktopPane.add(gi);
+        gi.setVisible(true);
+        encomendasAndamento = gi.getEncomendasAndamento();
+        encomendasFinalizadas = gi.getEncomendasFinalizadas();
+    }//GEN-LAST:event_gerenciarEncomendaActionPerformed
 
     /**
      * @param args the command line arguments

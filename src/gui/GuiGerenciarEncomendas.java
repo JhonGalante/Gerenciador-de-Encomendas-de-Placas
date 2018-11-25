@@ -5,6 +5,8 @@
  */
 package gui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -73,6 +75,7 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -88,7 +91,20 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             new String [] {
                 "Cliente", "Valor do Serviço", "Data de Entrega"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TblEncFinalizadas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblEncFinalizadasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TblEncFinalizadas);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -116,7 +132,20 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             new String [] {
                 "Cliente", "Valor do Serviço", "Prazo de Entrega"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TblEncAndamento.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblEncAndamentoMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(TblEncAndamento);
 
         btnAdicionar.setText("Adicionar");
@@ -127,8 +156,18 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         });
 
         btnAlterar.setText("Alterar");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnApagar.setText("Apagar");
+        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApagarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -192,6 +231,68 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         aberto = false;
     }//GEN-LAST:event_formInternalFrameClosing
 
+    private void TblEncAndamentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblEncAndamentoMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount() == 2){
+            if(TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0) != null){
+                GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
+                gi.setEncomenda((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
+                gi.getBtnFinalizar().setVisible(true);
+                gi.getBtnSalvar().setVisible(false);
+                gi.setClientes(clientes);
+                gi.setJustView(true);
+                gi.setVisible(true);
+                gi.setJustView(false);
+                if(gi.getEncomenda().getFinalizada()){
+                    encomendasFinalizadas.add(gi.getEncomenda());
+                    encomendasAndamento.remove(gi.getEncomenda());
+                    preencherTabelas();
+                }
+            }
+        }
+    }//GEN-LAST:event_TblEncAndamentoMouseClicked
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    private void TblEncFinalizadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblEncFinalizadasMouseClicked
+        // TODO add your handling code here:
+        if(evt.getClickCount() == 2){
+            if(TblEncFinalizadas.getValueAt(TblEncFinalizadas.getSelectedRow(), 0) != null){
+                GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
+                gi.setEncomenda((Encomenda) TblEncFinalizadas.getValueAt(TblEncFinalizadas.getSelectedRow(), 0));
+                gi.getBtnFinalizar().setVisible(false);
+                gi.getBtnSalvar().setVisible(false);
+                gi.setClientes(clientes);
+                gi.setJustView(true);
+                gi.setVisible(true);
+                gi.setJustView(false);
+            }
+        }
+    }//GEN-LAST:event_TblEncFinalizadasMouseClicked
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        // TODO add your handling code here:
+        if(TblEncAndamento.getSelectedRow() >= 0){
+            GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
+            gi.setAlterando(true);
+            gi.getBtnFinalizar().setVisible(false);
+            gi.setEncomenda((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
+            gi.setClientes(clientes);
+            gi.setVisible(true);
+            preencherTabelas();
+        }
+        
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        // TODO add your handling code here:
+        encomendasAndamento.remove((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
+        preencherTabelas();
+    }//GEN-LAST:event_btnApagarActionPerformed
+
     public List<Encomenda> getEncomendasAndamento() {
         return encomendasAndamento;
     }
@@ -222,9 +323,8 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             tbl1.removeRow(0);
         }
         
-        for (int i = 0; i < encomendasAndamento.size(); i++){
-            Encomenda enc1 = (Encomenda) encomendasAndamento.get(i);
-            Object linha[] = {enc1, enc1.getValorServico(), enc1.getDataEntrega()};
+        for (Encomenda enc1: encomendasAndamento){
+            Object linha[] = {enc1, enc1.getValorServico(), enc1.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy"))};
             tbl1.addRow(linha);
         }
         
@@ -235,10 +335,9 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             tbl2.removeRow(0);
         }
         
-        for (int i = 0; i < encomendasFinalizadas.size(); i++){
-            Encomenda enc2 = (Encomenda) encomendasFinalizadas.get(i);
-            Object linha[] = {enc2, enc2.getValorServico(), enc2.getDataEntrega()};
-            tbl1.addRow(linha);
+        for (Encomenda enc2: encomendasFinalizadas){
+            Object linha[] = {enc2, enc2.getValorServico(), enc2.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy"))};
+            tbl2.addRow(linha);
         }
            
     }

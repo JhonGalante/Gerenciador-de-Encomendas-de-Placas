@@ -11,6 +11,7 @@
   </SyntheticProperties>
   <Events>
     <EventHandler event="internalFrameClosing" listener="javax.swing.event.InternalFrameListener" parameters="javax.swing.event.InternalFrameEvent" handler="formInternalFrameClosing"/>
+    <EventHandler event="internalFrameOpened" listener="javax.swing.event.InternalFrameListener" parameters="javax.swing.event.InternalFrameEvent" handler="formInternalFrameOpened"/>
   </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -80,9 +81,9 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="4">
-                    <Column editable="true" title="Cliente" type="java.lang.Object"/>
-                    <Column editable="true" title="Valor do Servi&#xe7;o" type="java.lang.Object"/>
-                    <Column editable="true" title="Data de Entrega" type="java.lang.Object"/>
+                    <Column editable="false" title="Cliente" type="java.lang.Object"/>
+                    <Column editable="false" title="Valor do Servi&#xe7;o" type="java.lang.Object"/>
+                    <Column editable="false" title="Data de Entrega" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -108,6 +109,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TblEncFinalizadasMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -164,9 +168,9 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="4">
-                    <Column editable="true" title="Cliente" type="java.lang.Object"/>
-                    <Column editable="true" title="Valor do Servi&#xe7;o" type="java.lang.Object"/>
-                    <Column editable="true" title="Prazo de Entrega" type="java.lang.Object"/>
+                    <Column editable="false" title="Cliente" type="java.lang.Object"/>
+                    <Column editable="false" title="Valor do Servi&#xe7;o" type="java.lang.Object"/>
+                    <Column editable="false" title="Prazo de Entrega" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -192,6 +196,9 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TblEncAndamentoMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -207,11 +214,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Alterar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAlterarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnApagar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Apagar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnApagarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

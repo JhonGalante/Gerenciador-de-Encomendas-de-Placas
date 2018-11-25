@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import model.Cliente;
 import model.CorFrase;
 import model.CorPlaca;
@@ -25,7 +26,8 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
      */
     
     private Encomenda encomenda;
-    private Boolean alterando = false;
+    private Boolean alterando = false; //Set true in case of modifying a object
+    private Boolean justView = false; //Set true in case of just view a object data
     private List<Cliente> clientes;
     
     public GuiAdicionarEncomenda(java.awt.Frame parent, boolean modal) {
@@ -49,7 +51,6 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         campoAltura = new javax.swing.JTextField();
         campoLargura = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         campoFrase = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -64,6 +65,7 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         campoValorSinal = new javax.swing.JTextField();
         campoValorTotal = new javax.swing.JTextField();
         btnFinalizar = new javax.swing.JButton();
+        titleWindow = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Cliente");
@@ -113,9 +115,6 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel4.setText("Cadastro de Cliente");
-
         jLabel5.setText("Frase");
 
         jLabel6.setText("Cor da Placa");
@@ -145,98 +144,120 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
             }
         });
 
+        campoValorSinal.setToolTipText("Pelo menos 50% do valor do serviço");
+
         campoValorTotal.setEditable(false);
 
         btnFinalizar.setText("Finalizar");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
+
+        titleWindow.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        titleWindow.setText("Cadastro");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
-                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(CboClientes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(campoFrase))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(34, 34, 34)
-                                .addComponent(CboCorPlaca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(32, 32, 32)
-                                .addComponent(CboCorFrase, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(campoValorSinal)
-                                    .addComponent(campoValorTotal)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(78, 78, 78))
+                        .addComponent(jLabel1)
+                        .addGap(12, 12, 12)
+                        .addComponent(CboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(12, 12, 12)
+                        .addComponent(campoFrase, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(34, 34, 34)
+                        .addComponent(CboCorPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(32, 32, 32)
+                        .addComponent(CboCorFrase, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(12, 12, 12)
+                        .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(28, 28, 28)
+                        .addComponent(campoValorSinal, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addGap(43, 43, 43)
+                        .addComponent(campoValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(126, 126, 126)
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 23, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(132, 132, 132)
+                .addComponent(titleWindow)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel4)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                .addGap(32, 32, 32)
+                .addComponent(titleWindow)
+                .addGap(47, 47, 47)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel1))
                     .addComponent(CboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(12, 12, 12)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(campoFrase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel5))
+                    .addComponent(campoFrase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel6))
                     .addComponent(CboCorPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel7))
                     .addComponent(CboCorFrase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel8))
                     .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel9))
                     .addComponent(campoValorSinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel10))
                     .addComponent(campoValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnFinalizar)
                     .addComponent(btnSalvar))
-                .addGap(27, 27, 27))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -255,23 +276,49 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
             encomenda.setCorFrase((CorFrase)CboCorFrase.getSelectedItem());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
             encomenda.setDataEntrega(LocalDate.parse(campoPrazo.getText(), formatter));
-            encomenda.setValorSinal(Double.parseDouble(campoValorSinal.getText()));
+            Double valorSinal = Double.parseDouble(campoValorSinal.getText());
             encomenda.setValorServico();
-            this.setVisible(false);
+            if(valorSinal > encomenda.getValorServico()/2){
+                encomenda.setValorSinal(Double.parseDouble(campoValorSinal.getText()));
+                this.setVisible(false);
+            }else{
+                JOptionPane.showMessageDialog(null, "O valor do sinal deve ser pelo menos 50% do valor do serviço");
+            }
+            
+            
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         preencherCbos();
+        if(justView){
+            preencherCampos();
+            //Block editable field in case of just view
+            campoAltura.setEditable(false);
+            campoLargura.setEditable(false);
+            campoFrase.setEditable(false);
+            campoPrazo.setEditable(false);
+            campoValorSinal.setEditable(false);
+            campoValorTotal.setEditable(false);
+            CboClientes.setEnabled(false);
+            CboCorPlaca.setEnabled(false);
+            CboCorFrase.setEnabled(false);
+            titleWindow.setText("Dados");
+        }
         
+        else if(alterando){
+            preencherCampos();
+        }
     }//GEN-LAST:event_formWindowOpened
 
-    /**
-     * @param args the command line arguments
-     */
-    
-    
-    
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        // TODO add your handling code here:
+        encomenda.setFinalizada(true);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        encomenda.setDataEntrega(LocalDate.parse(JOptionPane.showInputDialog("Informar a data de entrega da encomenda: (dd/MM/yyyy)"),formatter));
+        this.setVisible(false);
+    }//GEN-LAST:event_btnFinalizarActionPerformed
+ 
     public Encomenda getEncomenda() {
         return encomenda;
     }
@@ -282,6 +329,10 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
 
     public void setAlterando(Boolean alterando) {
         this.alterando = alterando;
+    }
+
+    public void setJustView(Boolean justView) {
+        this.justView = justView;
     }
 
     public void setClientes(List<Cliente> clientes) {
@@ -312,10 +363,19 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         
     }
     
+    //Fill the fields with the data's object in case of already exists
+    private void preencherCampos(){
+        CboClientes.setSelectedItem(encomenda.getCliente());
+        CboCorPlaca.setSelectedItem(encomenda.getCorPlaca());
+        CboCorFrase.setSelectedItem(encomenda.getCorFrase());
+        campoAltura.setText(encomenda.getAltura().toString());
+        campoLargura.setText(encomenda.getLargura().toString());
+        campoFrase.setText(encomenda.getFraseEscrita());
+        campoPrazo.setText(encomenda.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy")));
+        campoValorSinal.setText(encomenda.getValorSinal().toString());
+        campoValorTotal.setText(encomenda.getValorServico().toString());
+    }
     
-    
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox CboClientes;
     private javax.swing.JComboBox<String> CboCorFrase;
@@ -332,12 +392,12 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel titleWindow;
     // End of variables declaration//GEN-END:variables
 }

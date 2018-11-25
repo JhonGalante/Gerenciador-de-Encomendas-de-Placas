@@ -112,14 +112,19 @@ public class Encomenda {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    @Override
-    public String toString(){
-        return this.cliente.getNome();
+
+    public Boolean getFinalizada() {
+        return finalizada;
+    }
+
+    public void setFinalizada(Boolean finalizada) {
+        this.finalizada = finalizada;
     }
     
     
     
-    
-    
+    @Override
+    public String toString(){
+        return this.cliente.getNome();
+    }   
 }

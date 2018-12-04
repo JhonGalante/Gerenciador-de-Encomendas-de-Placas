@@ -5,7 +5,10 @@
  */
 package gui;
 
+import dao.DadosUsuario;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Usuario;
 
 /**
@@ -19,6 +22,7 @@ public class GuiCriarConta extends javax.swing.JDialog {
      */
     
     private Usuario usuario;
+    private DadosUsuario dados = new DadosUsuario();
     
     public GuiCriarConta(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -104,6 +108,11 @@ public class GuiCriarConta extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         usuario = new Usuario(campoLogin.getText(), new String(campoSenha.getPassword()));
+        try {
+            dados.incluir(usuario);
+        } catch (Exception ex) {
+            Logger.getLogger(GuiCriarConta.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Jhonata
@@ -45,6 +48,7 @@ public class Cliente {
     public String toString(){
         return this.nome;
     }
+    
     
     
     

@@ -11,6 +11,7 @@
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
     <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
   </Events>
   <AuxValues>
@@ -54,23 +55,23 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                      <Component id="campoPrazo" min="-2" pref="125" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="campoPrazo" min="-2" pref="84" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
-                      <Component id="campoValorSinal" min="-2" pref="251" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="43" pref="43" max="-2" attributes="0"/>
-                      <Component id="campoValorTotal" min="-2" pref="251" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="btnFinalizar" min="-2" pref="110" max="-2" attributes="0"/>
-                      <EmptySpace min="126" pref="126" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="236" max="-2" attributes="0"/>
                       <Component id="btnSalvar" min="-2" pref="110" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="campoValorTotal" pref="251" max="32767" attributes="0"/>
+                          <Component id="campoValorSinal" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace min="0" pref="23" max="32767" attributes="0"/>
@@ -129,15 +130,12 @@
                   </Group>
                   <Component id="campoPrazo" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
-                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="campoValorSinal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoValorSinal" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
@@ -146,10 +144,7 @@
                   <Component id="campoValorTotal" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="32" pref="32" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnFinalizar" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnSalvar" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="btnSalvar" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="22" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -292,6 +287,7 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="campoPrazo">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
           <Format format="**/**/****" subtype="-1" type="5"/>
         </Property>
@@ -315,23 +311,10 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="campoValorSinal">
-      <Properties>
-        <Property name="toolTipText" type="java.lang.String" value="Pelo menos 50% do valor do servi&#xe7;o"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="campoValorTotal">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnFinalizar">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Finalizar"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFinalizarActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="titleWindow">
       <Properties>
@@ -340,6 +323,12 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Cadastro"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="campoValorSinal">
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="campoValorSinalFocusGained"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="campoValorSinalMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

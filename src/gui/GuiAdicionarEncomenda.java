@@ -5,9 +5,11 @@
  */
 package gui;
 
+import dao.DadosClientes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import model.Cliente;
@@ -24,11 +26,12 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
     /**
      * Creates new form GuiAdicionarEncomenda
      */
-    
-    private Encomenda encomenda;
+    private Encomenda encomenda = new Encomenda();;
     private Boolean alterando = false; //Set true in case of modifying a object
     private Boolean justView = false; //Set true in case of just view a object data
-    private List<Cliente> clientes;
+    private LocalDate dia;
+    private DadosClientes dadosClientes = new DadosClientes();
+    
     
     public GuiAdicionarEncomenda(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -62,15 +65,17 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btnSalvar = new javax.swing.JButton();
-        campoValorSinal = new javax.swing.JTextField();
         campoValorTotal = new javax.swing.JTextField();
-        btnFinalizar = new javax.swing.JButton();
         titleWindow = new javax.swing.JLabel();
+        campoValorSinal = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Cliente");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -127,6 +132,7 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
 
         jLabel8.setText("Prazo de Entrega");
 
+        campoPrazo.setEditable(false);
         try {
             campoPrazo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("**/**/****")));
         } catch (java.text.ParseException ex) {
@@ -144,19 +150,21 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
             }
         });
 
-        campoValorSinal.setToolTipText("Pelo menos 50% do valor do serviço");
-
         campoValorTotal.setEditable(false);
-
-        btnFinalizar.setText("Finalizar");
-        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFinalizarActionPerformed(evt);
-            }
-        });
 
         titleWindow.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         titleWindow.setText("Cadastro");
+
+        campoValorSinal.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                campoValorSinalFocusGained(evt);
+            }
+        });
+        campoValorSinal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                campoValorSinalMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,20 +192,19 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
                         .addComponent(CboCorFrase, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addGap(12, 12, 12)
-                        .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
+                        .addGap(236, 236, 236)
+                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel9))
                         .addGap(28, 28, 28)
-                        .addComponent(campoValorSinal, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(43, 43, 43)
-                        .addComponent(campoValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(126, 126, 126)
-                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(campoValorTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                            .addComponent(campoValorSinal))))
                 .addGap(0, 23, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(132, 132, 132)
@@ -242,10 +249,8 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
                         .addComponent(jLabel8))
                     .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel9))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
                     .addComponent(campoValorSinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,9 +259,7 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
                         .addComponent(jLabel10))
                     .addComponent(campoValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFinalizar)
-                    .addComponent(btnSalvar))
+                .addComponent(btnSalvar)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -266,31 +269,29 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
         if(!alterando){
-            encomenda = new Encomenda(); //Defining a new encomenda's object
+            
+            encomenda.setPrazoEntrega(dia);
         }
-            encomenda.setCliente((Cliente)CboClientes.getSelectedItem());
-            encomenda.setAltura(Double.parseDouble(campoAltura.getText()));
-            encomenda.setLargura(Double.parseDouble(campoLargura.getText()));
-            encomenda.setFraseEscrita(campoFrase.getText());
-            encomenda.setCorPlaca((CorPlaca) CboCorPlaca.getSelectedItem());
-            encomenda.setCorFrase((CorFrase)CboCorFrase.getSelectedItem());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-            encomenda.setDataEntrega(LocalDate.parse(campoPrazo.getText(), formatter));
-            Double valorSinal = Double.parseDouble(campoValorSinal.getText());
-            encomenda.setValorServico();
-            if(valorSinal > encomenda.getValorServico()/2){
-                encomenda.setValorSinal(Double.parseDouble(campoValorSinal.getText()));
-                this.setVisible(false);
-            }else{
-                JOptionPane.showMessageDialog(null, "O valor do sinal deve ser pelo menos 50% do valor do serviço");
-            }
-            
-            
+        encomenda.setCliente((Cliente) CboClientes.getSelectedItem());
+        calcularValorServico();
+        encomenda.setCorPlaca((CorPlaca) CboCorPlaca.getSelectedItem());
+        encomenda.setCorFrase((CorFrase)CboCorFrase.getSelectedItem());
+        Double valorSinal = Double.parseDouble(campoValorSinal.getText());
+        if(valorSinal > encomenda.getValorServico()/2){
+            encomenda.setValorSinal(Double.parseDouble(campoValorSinal.getText()));
+            this.setVisible(false);
+        }else{
+            JOptionPane.showMessageDialog(null, "O valor do sinal deve ser pelo menos 50% do valor do serviço");
+        }    
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
-        preencherCbos();
+        try {
+            // TODO add your handling code here:
+            preencherCbos();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiAdicionarEncomenda.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if(justView){
             preencherCampos();
             //Block editable field in case of just view
@@ -309,15 +310,29 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         else if(alterando){
             preencherCampos();
         }
+        else{
+            campoPrazo.setText(dia.format(DateTimeFormatter.ofPattern("d/MM/yyyy")));
+        }
     }//GEN-LAST:event_formWindowOpened
 
-    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+    private void campoValorSinalFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoValorSinalFocusGained
         // TODO add your handling code here:
-        encomenda.setFinalizada(true);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        encomenda.setDataEntrega(LocalDate.parse(JOptionPane.showInputDialog("Informar a data de entrega da encomenda: (dd/MM/yyyy)"),formatter));
-        this.setVisible(false);
-    }//GEN-LAST:event_btnFinalizarActionPerformed
+        calcularValorServico();
+        campoValorTotal.setText(encomenda.getValorServico().toString());
+    }//GEN-LAST:event_campoValorSinalFocusGained
+
+    private void campoValorSinalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoValorSinalMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoValorSinalMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        
+        //"Destroy" the object in case of the "save" button wasn't clicked
+        if(encomenda.getCliente() == null){
+            encomenda = null;
+        }
+    }//GEN-LAST:event_formWindowClosing
  
     public Encomenda getEncomenda() {
         return encomenda;
@@ -335,23 +350,24 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         this.justView = justView;
     }
 
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
-    }
-    
-    public JButton getBtnFinalizar() {
-        return btnFinalizar;
-    }
 
     public JButton getBtnSalvar() {
         return btnSalvar;
     }
+
+    public void setDia(LocalDate dia) {
+        this.dia = dia;
+    }
+
     
-    private void preencherCbos(){
+    
+    
+    
+    private void preencherCbos() throws Exception{
         //Fill the Client's ComboBox
         CboClientes.removeAllItems();
         
-        for(Cliente cliente: clientes){
+        for(Cliente cliente: dadosClientes.getList()){
             CboClientes.addItem(cliente);
         }
         
@@ -371,16 +387,23 @@ public class GuiAdicionarEncomenda extends javax.swing.JDialog {
         campoAltura.setText(encomenda.getAltura().toString());
         campoLargura.setText(encomenda.getLargura().toString());
         campoFrase.setText(encomenda.getFraseEscrita());
-        campoPrazo.setText(encomenda.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy")));
+        campoPrazo.setText(encomenda.getPrazoEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy")));
         campoValorSinal.setText(encomenda.getValorSinal().toString());
         campoValorTotal.setText(encomenda.getValorServico().toString());
     }
+    
+    private void calcularValorServico(){
+        encomenda.setAltura(Double.parseDouble(campoAltura.getText()));
+        encomenda.setLargura(Double.parseDouble(campoLargura.getText()));
+        encomenda.setFraseEscrita(campoFrase.getText());
+        encomenda.setValorServico();
+    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox CboClientes;
     private javax.swing.JComboBox<String> CboCorFrase;
     private javax.swing.JComboBox<String> CboCorPlaca;
-    private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JTextField campoAltura;
     private javax.swing.JTextField campoFrase;

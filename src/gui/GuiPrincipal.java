@@ -5,10 +5,6 @@
  */
 package gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import model.Cliente;
-import model.Encomenda;
 
 /**
  *
@@ -19,10 +15,7 @@ public class GuiPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form GuiPrincipal
      */
-    
-    private List<Cliente> clientes = new ArrayList();
-    private List<Encomenda> encomendasAndamento = new ArrayList();
-    private List<Encomenda> encomendasFinalizadas = new ArrayList();
+
     
     public GuiPrincipal() {
         initComponents();
@@ -49,6 +42,11 @@ public class GuiPrincipal extends javax.swing.JFrame {
         setAutoRequestFocus(false);
         setPreferredSize(new java.awt.Dimension(400, 300));
         setSize(new java.awt.Dimension(400, 300));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         menuCliente.setMnemonic('f');
         menuCliente.setText("Cliente");
@@ -106,24 +104,22 @@ public class GuiPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         GuiGerenciarClientes gi = GuiGerenciarClientes.getInstance();
         if (gi==null) return;
-        gi.setClientes(clientes); //set list of clients
         desktopPane.add(gi);
         gi.setVisible(true);
-        clientes = gi.getClientes(); //get new list of clients
     }//GEN-LAST:event_gerenciarClienteActionPerformed
 
     private void gerenciarEncomendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerenciarEncomendaActionPerformed
         // TODO add your handling code here:
         GuiGerenciarEncomendas gi = GuiGerenciarEncomendas.getInstance();
         if(gi==null) return;
-        gi.setEncomendasAndamento(encomendasAndamento);
-        gi.setEncomendasFinalizadas(encomendasFinalizadas);
-        gi.setClientes(clientes);
         desktopPane.add(gi);
         gi.setVisible(true);
-        encomendasAndamento = gi.getEncomendasAndamento();
-        encomendasFinalizadas = gi.getEncomendasFinalizadas();
     }//GEN-LAST:event_gerenciarEncomendaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+         
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -159,15 +155,7 @@ public class GuiPrincipal extends javax.swing.JFrame {
             }
         });
     }
-
-    public List<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
-    }
-    
+  
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

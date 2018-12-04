@@ -5,8 +5,10 @@
  */
 package gui;
 
-import java.util.ArrayList;
+import dao.DadosClientes;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
@@ -18,9 +20,9 @@ import model.Cliente;
 public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
 
     private Cliente cliente;
-    private List<Cliente> clientes;
     private static Boolean aberto = false;
     private static Boolean alterando = false;
+    private DadosClientes dados = new DadosClientes();
     /**
      * Creates new form GuiGerenciarClientes
      */
@@ -147,7 +149,20 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
             new String [] {
                 "Nome", "Telefone"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TblClientes);
 
         btnAlterar.setText("Alterar");
@@ -216,7 +231,11 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
                 cliente = new Cliente();
                 cliente.setNome(campoNome.getText());
                 cliente.setTelefone(campoTelefone.getText());
-                clientes.add(cliente);
+                try {
+                    dados.incluir(cliente);
+                } catch (Exception ex) {
+                    Logger.getLogger(GuiGerenciarClientes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }else{
                 JOptionPane.showMessageDialog(null, "Favor preencher o campo obrigatório");
             }
@@ -227,7 +246,11 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         }
         alterando = false;
         limparCampos(); //clean fields after submit a new object
-        preencherTabela();
+        try {
+            preencherTabela();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiGerenciarClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
@@ -242,8 +265,13 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
         // TODO add your handling code here:
         cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
-        clientes.remove(cliente);
-        preencherTabela();
+        try {
+            dados.excluir(cliente);
+             preencherTabela();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiGerenciarClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }//GEN-LAST:event_btnApagarActionPerformed
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
@@ -252,14 +280,22 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formInternalFrameClosing
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        // TODO add your handling code here:
-        preencherTabela();
+        try {
+            // TODO add your handling code here:
+            preencherTabela();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiGerenciarClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void TblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblClientesMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TblClientesMouseClicked
 
     
     
     //Fill in the table
-    private void preencherTabela(){
+    private void preencherTabela() throws Exception{
     
         DefaultTableModel tbl = (DefaultTableModel) TblClientes.getModel();
         int qtdeLinhas = tbl.getRowCount();
@@ -267,9 +303,9 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         for(int i = qtdeLinhas - 1; i >= 0 ; i--){
             tbl.removeRow(0);
         }
-        
-        for (int i = 0; i < clientes.size(); i++){
-            Cliente c1 = (Cliente) clientes.get(i);
+        List<Cliente> clientesSalvos = dados.getList();
+        for (int i = 0; i < clientesSalvos.size(); i++){
+            Cliente c1 = (Cliente) clientesSalvos.get(i);
             Object linha[] = {c1, c1.getTelefone()};
             tbl.addRow(linha);
         }
@@ -282,18 +318,7 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         campoNome.setText("");
         campoTelefone.setText("");
     }
-    
-    
-    
-    //Getters & Setters
-    public List<Cliente> getClientes() {
-        return clientes;
-    }
 
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
-    }
-    
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

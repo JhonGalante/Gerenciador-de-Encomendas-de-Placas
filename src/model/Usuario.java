@@ -18,7 +18,10 @@ public class Usuario {
         this.login = login;
         this.senha = senha;
     }
+    
+    public Usuario(){}
 
+    
     public String getLogin() {
         return login;
     }
@@ -26,5 +29,9 @@ public class Usuario {
     public String getSenha() {
         return senha;
     }
+
+    
+    
+    
   
 }

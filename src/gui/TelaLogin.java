@@ -5,9 +5,14 @@
  */
 package gui;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import dao.DadosUsuario;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Usuario;
 
@@ -17,8 +22,7 @@ import model.Usuario;
  */
 public class TelaLogin extends javax.swing.JFrame {
 
-    private List<Usuario> usuariosCadastrados = new ArrayList();
-    
+    private DadosUsuario dados = new DadosUsuario();
     /**
      * Creates new form TelaLogin
      */
@@ -46,6 +50,11 @@ public class TelaLogin extends javax.swing.JFrame {
         campoSenha = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
         jLabel1.setText("Login");
@@ -129,17 +138,21 @@ public class TelaLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // TODO add your handling code here:
-        for(Usuario usuario: usuariosCadastrados){
-            if(usuario.getLogin().equals(campoLogin.getText())&&
-               usuario.getSenha().equals(new String(campoSenha.getPassword()))){
-                
-                GuiPrincipal mainGui = new GuiPrincipal();
-                mainGui.setVisible(true);
-                this.setVisible(false);
-                return;
-                
+        try {
+            // TODO add your handling code here:
+            for(Usuario usuario: dados.getList()){
+                if(usuario.getLogin().equals(campoLogin.getText())&&
+                        usuario.getSenha().equals(new String(campoSenha.getPassword()))){
+                    
+                    GuiPrincipal mainGui = new GuiPrincipal();
+                    mainGui.setVisible(true);
+                    this.setVisible(false);
+                    return;
+                    
+                }
             }
+        } catch (Exception ex) {
+            Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos");
@@ -183,8 +196,25 @@ public class TelaLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         GuiCriarConta guiConta = new GuiCriarConta(null, true);
         guiConta.setVisible(true);
-        usuariosCadastrados.add(guiConta.getUsuario());
     }//GEN-LAST:event_createAccMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            // TODO add your handling code here:
+            FileReader fr = new FileReader("C:\\Users\\jhona\\Desktop\\caminho.txt");
+        } catch (FileNotFoundException ex) {
+            try {
+                BufferedWriter caminho = new BufferedWriter(new FileWriter("C:\\Users\\jhona\\Desktop\\caminho.txt"));
+                caminho.append(JOptionPane.showInputDialog("Digite o caminho que deseja salvar os dados do programa"));
+                caminho.close();
+            } catch (IOException ex1) {
+                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+        
+        
+    }//GEN-LAST:event_formWindowOpened
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,28 +5,33 @@
  */
 package gui;
 
+import dao.DadosEncomendasAndamento;
+import dao.DadosEncomendasFinalizadas;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import model.Cliente;
+
 import model.Encomenda;
 
 /**
  *
- * @author jhona
+ * @author jhonata
  */
 public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form GuiGerenciarEncomendas
      */
-    
-    private List<Encomenda> encomendasAndamento = new ArrayList();
-    private List<Encomenda> encomendasFinalizadas = new ArrayList();
-    private List<Cliente> clientes;
     private static Boolean aberto = false;
+    private static Integer qtdeNoDia;
+    private static LocalDate dia = LocalDate.now();
+    private DadosEncomendasAndamento dadosAndamento = new DadosEncomendasAndamento();
+    private DadosEncomendasFinalizadas dadosFinalizadas = new DadosEncomendasFinalizadas();
     
     public GuiGerenciarEncomendas() {
         initComponents();
@@ -56,12 +61,19 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         btnAdicionar = new javax.swing.JButton();
         btnAlterar = new javax.swing.JButton();
         btnApagar = new javax.swing.JButton();
+        btnFinalizar = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setTitle("Gerenciar Encomendas");
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formFocusGained(evt);
+            }
+        });
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameActivated(evt);
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -169,13 +181,21 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             }
         });
 
+        btnFinalizar.setText("Finalizar");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinalizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(btnFinalizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdicionar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAlterar)
@@ -191,7 +211,8 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdicionar)
                     .addComponent(btnAlterar)
-                    .addComponent(btnApagar))
+                    .addComponent(btnApagar)
+                    .addComponent(btnFinalizar))
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
@@ -219,11 +240,17 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
         gi.setAlterando(false);
-        gi.getBtnFinalizar().setVisible(false);
-        gi.setClientes(clientes);
+        verificarEncomendasDia();
+        gi.setDia(dia);
         gi.setVisible(true);
-        encomendasAndamento.add(gi.getEncomenda());
-        preencherTabelas();
+        if(gi.getEncomenda() != null){
+            try {
+                dadosAndamento.incluir(gi.getEncomenda());
+                preencherTabelas();
+            } catch (Exception ex) {
+                Logger.getLogger(GuiGerenciarEncomendas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
@@ -236,25 +263,26 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         if(evt.getClickCount() == 2){
             if(TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0) != null){
                 GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
-                gi.setEncomenda((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
-                gi.getBtnFinalizar().setVisible(true);
+                Encomenda encomenda = (Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0);
+                gi.setEncomenda(encomenda);
                 gi.getBtnSalvar().setVisible(false);
-                gi.setClientes(clientes);
                 gi.setJustView(true);
                 gi.setVisible(true);
                 gi.setJustView(false);
-                if(gi.getEncomenda().getFinalizada()){
-                    encomendasFinalizadas.add(gi.getEncomenda());
-                    encomendasAndamento.remove(gi.getEncomenda());
-                    preencherTabelas();
-                }
             }
         }
     }//GEN-LAST:event_TblEncAndamentoMouseClicked
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         // TODO add your handling code here:
-        
+        //Get the amount of orders of the day
+        try {
+            preencherTabelas();
+            verificarEncomendasDia();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiGerenciarEncomendas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void TblEncFinalizadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblEncFinalizadasMouseClicked
@@ -263,9 +291,7 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             if(TblEncFinalizadas.getValueAt(TblEncFinalizadas.getSelectedRow(), 0) != null){
                 GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
                 gi.setEncomenda((Encomenda) TblEncFinalizadas.getValueAt(TblEncFinalizadas.getSelectedRow(), 0));
-                gi.getBtnFinalizar().setVisible(false);
                 gi.getBtnSalvar().setVisible(false);
-                gi.setClientes(clientes);
                 gi.setJustView(true);
                 gi.setVisible(true);
                 gi.setJustView(false);
@@ -278,44 +304,56 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
         if(TblEncAndamento.getSelectedRow() >= 0){
             GuiAdicionarEncomenda gi = new GuiAdicionarEncomenda(null, true);
             gi.setAlterando(true);
-            gi.getBtnFinalizar().setVisible(false);
             gi.setEncomenda((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
-            gi.setClientes(clientes);
             gi.setVisible(true);
-            preencherTabelas();
+            try {
+                dadosAndamento.alterar();
+                preencherTabelas();
+            } catch (Exception ex) {
+                Logger.getLogger(GuiGerenciarEncomendas.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
-        // TODO add your handling code here:
-        encomendasAndamento.remove((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
-        preencherTabelas();
+        try {
+            // TODO add your handling code here:
+            dadosAndamento.excluir((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
+            preencherTabelas();
+        } catch (Exception ex) {
+            Logger.getLogger(GuiGerenciarEncomendas.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnApagarActionPerformed
 
-    public List<Encomenda> getEncomendasAndamento() {
-        return encomendasAndamento;
-    }
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_formFocusGained
 
-    public void setEncomendasAndamento(List<Encomenda> encomendasAndamento) {
-        this.encomendasAndamento = encomendasAndamento;
-    }
+    private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_formInternalFrameActivated
 
-    public List<Encomenda> getEncomendasFinalizadas() {
-        return encomendasFinalizadas;
-    }
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        // TODO add your handling code here:
+        try {
+            Encomenda encomenda = (Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0);
+            LocalDate dataEntrega = LocalDate.parse(JOptionPane.showInputDialog("Digite a data de entrega da encomenda"), DateTimeFormatter.ofPattern("d/MM/yyyy"));
+            dadosAndamento.excluir((Encomenda) TblEncAndamento.getValueAt(TblEncAndamento.getSelectedRow(), 0));
+            encomenda.setDataEntrega(dataEntrega);
+            dadosFinalizadas.incluir(encomenda);
+            preencherTabelas();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possivel finalizar a encomenda");
+        }
+        
+    }//GEN-LAST:event_btnFinalizarActionPerformed
 
-    public void setEncomendasFinalizadas(List<Encomenda> encomendasFinalizadas) {
-        this.encomendasFinalizadas = encomendasFinalizadas;
-    }
-
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
-    }
-    
     //Fill in the table
-    private void preencherTabelas(){
-    
+    private void preencherTabelas() throws Exception{
+       
         DefaultTableModel tbl1 = (DefaultTableModel) TblEncAndamento.getModel();
         int qtdeLinhas1 = tbl1.getRowCount();
         
@@ -323,10 +361,12 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             tbl1.removeRow(0);
         }
         
-        for (Encomenda enc1: encomendasAndamento){
-            Object linha[] = {enc1, enc1.getValorServico(), enc1.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy"))};
+        for (Encomenda enc1: dadosAndamento.getList()){
+            Object linha[] = {enc1, enc1.getValorServico(), enc1.getPrazoEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy"))};
             tbl1.addRow(linha);
         }
+        
+        //----------------------------------------------------------------------------
         
         DefaultTableModel tbl2 = (DefaultTableModel) TblEncFinalizadas.getModel();
         int qtdeLinhas2 = tbl2.getRowCount();
@@ -335,23 +375,42 @@ public class GuiGerenciarEncomendas extends javax.swing.JInternalFrame {
             tbl2.removeRow(0);
         }
         
-        for (Encomenda enc2: encomendasFinalizadas){
+        for (Encomenda enc2: dadosFinalizadas.getList()){
             Object linha[] = {enc2, enc2.getValorServico(), enc2.getDataEntrega().format(DateTimeFormatter.ofPattern("d/MM/yyyy"))};
             tbl2.addRow(linha);
         }
            
     }
     
+    private void verificarEncomendasDia(){
+        qtdeNoDia = 0;
+        List<Encomenda> encomendasTotais = new ArrayList();
+        try{
+            encomendasTotais.addAll(dadosAndamento.getList());
+            encomendasTotais.addAll(dadosFinalizadas.getList());
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        
+        for(Encomenda encomenda: encomendasTotais){
+            if(encomenda.getPrazoEntrega().isEqual(dia)){
+                qtdeNoDia++;
+                 if(qtdeNoDia >= 2){
+                    dia = dia.plusDays(1);
+                    qtdeNoDia = 0;
+                 }
+            }
+            
+        }
+    }
     
-    
-  
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TblEncAndamento;
     private javax.swing.JTable TblEncFinalizadas;
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnApagar;
+    private javax.swing.JButton btnFinalizar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

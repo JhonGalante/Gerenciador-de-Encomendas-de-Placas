@@ -19,11 +19,11 @@ public class Encomenda {
     private String fraseEscrita;
     private CorPlaca corPlaca;
     private CorFrase corFrase;
+    private LocalDate prazoEntrega;
     private LocalDate dataEntrega;
     private Double valorServico;
     private Double valorSinal;
     private Cliente cliente;
-    private Boolean finalizada;
     
     public Encomenda(){
         this.altura = 0.0;
@@ -31,9 +31,9 @@ public class Encomenda {
         this.fraseEscrita = "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         this.dataEntrega = LocalDate.parse("01/01/2000", formatter);
+        this.prazoEntrega = LocalDate.parse("01/01/2000", formatter);
         this.valorServico = 0.0;
         this.valorSinal = 0.0;
-        this.finalizada = false;
     }
 
     public Double getAltura() {
@@ -84,6 +84,14 @@ public class Encomenda {
         this.dataEntrega = dataEntrega;
     }
 
+    public LocalDate getPrazoEntrega() {
+        return prazoEntrega;
+    }
+
+    public void setPrazoEntrega(LocalDate prazoEntrega) {
+        this.prazoEntrega = prazoEntrega;
+    }
+
     public Double getValorServico() {
         return valorServico;
     }
@@ -113,18 +121,10 @@ public class Encomenda {
         this.cliente = cliente;
     }
 
-    public Boolean getFinalizada() {
-        return finalizada;
-    }
-
-    public void setFinalizada(Boolean finalizada) {
-        this.finalizada = finalizada;
-    }
-    
-    
     
     @Override
     public String toString(){
-        return this.cliente.getNome();
-    }   
+        if(cliente != null) return cliente.getNome();
+        return "Sem cliente";
+    }
 }

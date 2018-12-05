@@ -7,6 +7,7 @@ package gui;
 
 import dao.DadosUsuario;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -199,12 +200,13 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_createAccMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
         try {
             // TODO add your handling code here:
-            FileReader fr = new FileReader("C:\\Users\\jhona\\Desktop\\caminho.txt"); //Modify to some directory of your desktop
+            FileReader fr = new FileReader(System.getProperty("user.dir") + "\\caminho.txt"); //Modify to some directory of your desktop
         } catch (FileNotFoundException ex) {
             try {
-                BufferedWriter caminho = new BufferedWriter(new FileWriter("C:\\Users\\jhona\\Desktop\\caminho.txt")); //Modify to some directory of your desktop
+                BufferedWriter caminho = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "\\caminho.txt")); //Modify to some directory of your desktop
                 caminho.append(JOptionPane.showInputDialog("Digite o caminho que deseja salvar os dados do programa"));
                 caminho.close();
             } catch (IOException ex1) {

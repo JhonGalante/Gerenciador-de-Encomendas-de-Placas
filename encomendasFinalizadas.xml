@@ -1,0 +1,17 @@
+<list>
+  <model.Encomenda>
+    <altura>2.0</altura>
+    <largura>2.0</largura>
+    <fraseEscrita>Placa 1</fraseEscrita>
+    <corPlaca>Branca</corPlaca>
+    <corFrase>Vermelho</corFrase>
+    <prazoEntrega>2018-12-05</prazoEntrega>
+    <dataEntrega>2018-12-07</dataEntrega>
+    <valorServico>591.12</valorServico>
+    <valorSinal>350.0</valorSinal>
+    <cliente>
+      <nome>Jhonata</nome>
+      <telefone>(22) 99927 - 9717</telefone>
+    </cliente>
+  </model.Encomenda>
+</list>

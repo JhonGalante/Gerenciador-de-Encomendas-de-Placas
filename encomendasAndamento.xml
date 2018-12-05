@@ -1,0 +1,62 @@
+<list>
+  <model.Encomenda>
+    <altura>2.0</altura>
+    <largura>3.0</largura>
+    <fraseEscrita>Placa Do Alan</fraseEscrita>
+    <corPlaca>Branca</corPlaca>
+    <corFrase>Preto</corFrase>
+    <prazoEntrega>2018-12-05</prazoEntrega>
+    <dataEntrega>2000-01-01</dataEntrega>
+    <valorServico>887.32</valorServico>
+    <valorSinal>500.0</valorSinal>
+    <cliente>
+      <nome>Alan</nome>
+      <telefone>(22) 99994 - 7318</telefone>
+    </cliente>
+  </model.Encomenda>
+  <model.Encomenda>
+    <altura>3.0</altura>
+    <largura>4.0</largura>
+    <fraseEscrita>Placa do Jomar</fraseEscrita>
+    <corPlaca>Cinza</corPlaca>
+    <corFrase>Verde</corFrase>
+    <prazoEntrega>2018-12-06</prazoEntrega>
+    <dataEntrega>2000-01-01</dataEntrega>
+    <valorServico>1771.44</valorServico>
+    <valorSinal>1000.0</valorSinal>
+    <cliente>
+      <nome>Jomar</nome>
+      <telefone>(22) 99908 - 1298</telefone>
+    </cliente>
+  </model.Encomenda>
+  <model.Encomenda>
+    <altura>4.0</altura>
+    <largura>2.0</largura>
+    <fraseEscrita>Placa da Nathalia</fraseEscrita>
+    <corPlaca>Branca</corPlaca>
+    <corFrase>Vermelho</corFrase>
+    <prazoEntrega>2018-12-06</prazoEntrega>
+    <dataEntrega>2000-01-01</dataEntrega>
+    <valorServico>1183.2</valorServico>
+    <valorSinal>600.0</valorSinal>
+    <cliente>
+      <nome>Nathalia</nome>
+      <telefone>(22) 99944 - 3354</telefone>
+    </cliente>
+  </model.Encomenda>
+  <model.Encomenda>
+    <altura>2.0</altura>
+    <largura>3.0</largura>
+    <fraseEscrita>Placa do Jhonata</fraseEscrita>
+    <corPlaca>Cinza</corPlaca>
+    <corFrase>Vermelho</corFrase>
+    <prazoEntrega>2018-12-07</prazoEntrega>
+    <dataEntrega>2000-01-01</dataEntrega>
+    <valorServico>888.2800000000001</valorServico>
+    <valorSinal>450.0</valorSinal>
+    <cliente>
+      <nome>Jhonata</nome>
+      <telefone>(22) 99927 - 9717</telefone>
+    </cliente>
+  </model.Encomenda>
+</list>

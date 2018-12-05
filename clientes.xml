@@ -1,0 +1,18 @@
+<list>
+  <model.Cliente>
+    <nome>Jhonata</nome>
+    <telefone>(22) 99927 - 9717</telefone>
+  </model.Cliente>
+  <model.Cliente>
+    <nome>Alan</nome>
+    <telefone>(22) 99994 - 7318</telefone>
+  </model.Cliente>
+  <model.Cliente>
+    <nome>Jomar</nome>
+    <telefone>(22) 99908 - 1298</telefone>
+  </model.Cliente>
+  <model.Cliente>
+    <nome>Nathalia</nome>
+    <telefone>(22) 99944 - 3354</telefone>
+  </model.Cliente>
+</list>

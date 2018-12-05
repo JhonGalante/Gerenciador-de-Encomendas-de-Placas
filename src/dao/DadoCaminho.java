@@ -15,7 +15,7 @@ import java.io.FileReader;
  */
 public class DadoCaminho {
     
-    private String caminho = "C:\\Users\\jhona\\Desktop\\caminho.txt";
+    private String caminho = System.getProperty("user.dir") + "\\caminho.txt";
     
     public BufferedReader lerCaminho() throws FileNotFoundException{
        BufferedReader buffRead = new BufferedReader(new FileReader(caminho));

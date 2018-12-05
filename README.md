@@ -6,6 +6,7 @@ João confecciona placas por encomenda. Como o volume dos pedidos tem aumentado,
 pediu para você fazer uma pequena aplicação que controle:
 - o cadastro de seus clientes
 - as encomendas
+
 Quando ele recebe uma encomenda, João anota num caderninho o nome do cliente e seu
 telefone.
 Para a encomenda, ele registra: o tamanho da placa (altura e largura), a frase a ser

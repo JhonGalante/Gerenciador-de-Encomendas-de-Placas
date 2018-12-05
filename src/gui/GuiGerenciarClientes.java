@@ -240,9 +240,14 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, "Favor preencher o campo obrigatório");
             }
         }else{
-            cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
+            
             cliente.setNome(campoNome.getText());
             cliente.setTelefone(campoTelefone.getText());
+            try {
+                dados.alterar();
+            } catch (Exception ex) {
+                Logger.getLogger(GuiGerenciarClientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         alterando = false;
         limparCampos(); //clean fields after submit a new object
@@ -260,6 +265,7 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         campoNome.setText(cliente.getNome());
         campoTelefone.setText(cliente.getTelefone());
         campoNome.requestFocus();
+        cliente = (Cliente) TblClientes.getValueAt(TblClientes.getSelectedRow(), 0);
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
@@ -303,10 +309,9 @@ public class GuiGerenciarClientes extends javax.swing.JInternalFrame {
         for(int i = qtdeLinhas - 1; i >= 0 ; i--){
             tbl.removeRow(0);
         }
-        List<Cliente> clientesSalvos = dados.getList();
-        for (int i = 0; i < clientesSalvos.size(); i++){
-            Cliente c1 = (Cliente) clientesSalvos.get(i);
-            Object linha[] = {c1, c1.getTelefone()};
+
+        for(Cliente cl: dados.getList()){
+            Object linha[] = {cl, cl.getTelefone()};
             tbl.addRow(linha);
         }
            

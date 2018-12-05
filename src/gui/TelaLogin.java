@@ -201,10 +201,10 @@ public class TelaLogin extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             // TODO add your handling code here:
-            FileReader fr = new FileReader("C:\\Users\\jhona\\Desktop\\caminho.txt");
+            FileReader fr = new FileReader("C:\\Users\\jhona\\Desktop\\caminho.txt"); //Modify to some directory of your desktop
         } catch (FileNotFoundException ex) {
             try {
-                BufferedWriter caminho = new BufferedWriter(new FileWriter("C:\\Users\\jhona\\Desktop\\caminho.txt"));
+                BufferedWriter caminho = new BufferedWriter(new FileWriter("C:\\Users\\jhona\\Desktop\\caminho.txt")); //Modify to some directory of your desktop
                 caminho.append(JOptionPane.showInputDialog("Digite o caminho que deseja salvar os dados do programa"));
                 caminho.close();
             } catch (IOException ex1) {
